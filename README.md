@@ -8,7 +8,7 @@
 - TTS düğmesi harfin adını ve kelimelerin telaffuzunu okur. Harf adı ile sesbirim aynı şey olmadığından ünsüz ses öğretimi için TTS tek başına kullanılmaz.
 - Dört öğrenme aşaması sırayla açılır; sonraki aşama önceki aşamadaki harfler tamamlanınca açılır.
 - Hece, kelime ve cümle alıştırmaları yalnızca o aşamada öğrenilmiş harflerle sınırlıdır.
-- Dinle ve harfi bul oyunu yalnızca açılmış aşamalardaki harfleri kullanır.
+- Dinle ve harfi bul oyunu ile harfi içeren kelimeyi görselden seçme oyunu yalnızca açılmış aşamalardaki içerikleri kullanır.
 - Küçük/büyük harf seçilebilen parmakla yazma alanı, özgün Material ikonlu kelime kartları ve veli bilgilendirme ekranı içerir.
 - İlerleme SharedPreferences ile cihazda tutulur; hesap ve sunucu gerektirmez.
 
