@@ -41,9 +41,9 @@ void main() {
       final items = [...syllables[i], ...words[i], sentences[i]];
       for (final item in items) {
         final normalized = item.toLowerCase().replaceAll(
-          RegExp(r'[^a-zçğıöşü]'),
-          '',
-        );
+              RegExp(r'[^a-zçğıöşü]'),
+              '',
+            );
         expect(
           normalized.split('').every(learned.contains),
           isTrue,
@@ -58,9 +58,9 @@ void main() {
       for (final letter in groups[i]) {
         for (final example in examples[letter] ?? const <String>[]) {
           final normalized = example.toLowerCase().replaceAll(
-            RegExp(r'[^a-zçğıöşü]'),
-            '',
-          );
+                RegExp(r'[^a-zçğıöşü]'),
+                '',
+              );
           expect(
             normalized.split('').every(learned.contains),
             isTrue,
@@ -75,14 +75,14 @@ void main() {
     expect(readingPassages.length, 3);
     final learned = officialSoundGroups.expand((g) => g).toSet();
     for (final passage in readingPassages) {
-      final text = '${passage.title} ${passage.body} ${passage.question} ${passage.options.join(' ')}';
+      final text =
+          '${passage.title} ${passage.body} ${passage.question} ${passage.options.join(' ')}';
       final normalized = text.toLowerCase().replaceAll(
-        RegExp(r'[^a-zçğıöşü]'),
-        '',
-      );
+            RegExp(r'[^a-zçğıöşü]'),
+            '',
+          );
       expect(normalized.split('').every(learned.contains), isTrue);
       expect(passage.answer, inInclusiveRange(0, passage.options.length - 1));
     }
   });
-
 }

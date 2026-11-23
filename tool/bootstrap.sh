@@ -6,8 +6,12 @@ if ! command -v flutter >/dev/null 2>&1; then
   exit 1
 fi
 
-# Generate native Android/iOS folders while preserving lib/ and pubspec.yaml.
-flutter create --platforms=android,ios --org com.csprofesor .
+# Platform klasörlerini eksikse tamamla ve paketleri indir.
+flutter create --platforms=android,ios,web,macos,linux,windows --org com.csprofesor .
 flutter pub get
 
-echo "Hazır. Android: flutter run -d android | iOS: flutter run -d ios"
+echo "Hazır. Çalıştırma seçenekleri:"
+echo "  Web:     flutter run -d chrome"
+echo "  macOS:   flutter run -d macos"
+echo "  Android: flutter run -d android"
+echo "  iOS:     flutter run -d ios"

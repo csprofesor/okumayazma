@@ -12,10 +12,9 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
-      - name: Generate Android and iOS project scaffolding
-        run: flutter create --platforms=android,ios --org com.csprofesor .
       - run: flutter pub get
-      - run: dart format lib
+      - run: dart format --output=none --set-exit-if-changed lib test
       - run: flutter analyze
       - run: flutter test
+      - run: flutter build web
       - run: flutter build apk --debug
