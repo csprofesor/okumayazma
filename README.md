@@ -46,7 +46,7 @@ bash tool/bootstrap.sh
 flutter run
 ```
 
-\`bash tool/bootstrap.sh\` komutu Android/iOS yerel proje klasörlerini üretir ve paketleri indirir. Android/iOS mağaza paketleri için imzalama, uygulama kimliği, mağaza görselleri, gizlilik beyanı ve gerçek cihaz testleri ayrıca tamamlanmalıdır.
+`bash tool/bootstrap.sh` komutu Android/iOS yerel proje klasörlerini üretir ve paketleri indirir. Android/iOS mağaza paketleri için imzalama, uygulama kimliği, mağaza görselleri, gizlilik beyanı ve gerçek cihaz testleri ayrıca tamamlanmalıdır.
 
 ## Telif ve içerik ilkeleri
 - Harf kartları, örnek kelimeler, cümleler, ekran tasarımı ve etkinlik mantığı bu proje için özgün hazırlanır.
