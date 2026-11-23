@@ -99,6 +99,14 @@ class _HomeState extends State<Home> {
   ));}),
   const SizedBox(height:18),const Text('Hızlı erişim',style:TextStyle(fontSize:20,fontWeight:FontWeight.bold)),
   Row(children:[Expanded(child:Card(child:ListTile(leading:const Icon(Icons.hearing,color:Colors.orange),title:const Text('Harf ve kelime oyunları'),onTap:()=>setState(()=>tab=1)))),Expanded(child:Card(child:ListTile(leading:const Icon(Icons.gesture,color:Colors.green),title:const Text('Yazı atölyesi'),onTap:()=>setState(()=>tab=2))))]),
+  const SizedBox(height:10),
+  Card(child:ListTile(
+   leading:const Icon(Icons.menu_book_rounded,color:Color(0xff3977c3),size:30),
+   title:const Text('Okuma Bahçesi',style:TextStyle(fontWeight:FontWeight.bold)),
+   subtitle:Text(done.length==29?'Kısa hikâyeler ve anlama soruları':'Tüm harfleri tamamlayınca açılır'),
+   trailing:Icon(done.length==29?Icons.chevron_right:Icons.lock_outline),
+   onTap:done.length==29?()=>Navigator.push(context,MaterialPageRoute(builder:(_)=>const ReadingPage())):null,
+  )),
  ]);
 }
 class GroupScreen extends StatefulWidget{
@@ -190,6 +198,88 @@ class WordScreen extends StatelessWidget{
  const SizedBox(height:12),
  ...words[index].map((w)=>Card(child:ListTile(leading:illustration(w),title:Text(w,style:const TextStyle(fontSize:24,fontWeight:FontWeight.bold)),trailing:IconButton(onPressed:()=>speak(w),icon:const Icon(Icons.volume_up))))),
  ]));
+}
+class ReadingPassage{
+ final String title;
+ final String body;
+ final String question;
+ final List<String> options;
+ final int answer;
+ const ReadingPassage({required this.title,required this.body,required this.question,required this.options,required this.answer});
+}
+const readingPassages=[
+ ReadingPassage(
+  title:'Ali ve Küçük Kuş',
+  body:'Sabah erkenden Ali bahçeye çıktı. Küçük bir kuş ağacın dalına kondu. Ali kuşa su verdi. Kuş neşeyle uçtu.',
+  question:'Ali kuşa ne verdi?',
+  options:['Su','Ekmek','Oyuncak'],
+  answer:0,
+ ),
+ ReadingPassage(
+  title:'Kitapta Neler Var?',
+  body:'Zeynep ve Efe kitap okudu. Kitapta deniz, orman ve yıldızlar vardı. İkisi de yeni şeyler öğrendi.',
+  question:'Kitapta hangileri vardı?',
+  options:['Deniz, orman ve yıldızlar','Araba, tren ve uçak','Masa, sandalye ve dolap'],
+  answer:0,
+ ),
+ ReadingPassage(
+  title:'Minik Kaplumbağa',
+  body:'Minik kaplumbağa yavaş yavaş ilerledi. Yolun sonunda gölgeli bir ağaç buldu. Ağacın altında dinlendi.',
+  question:'Kaplumbağa nerede dinlendi?',
+  options:['Ağacın altında','Denizde','Bir evin içinde'],
+  answer:0,
+ ),
+];
+class ReadingPage extends StatefulWidget{
+ const ReadingPage({super.key});
+ @override State<ReadingPage> createState()=>_ReadingPageState();
+}
+class _ReadingPageState extends State<ReadingPage>{
+ int index=0;
+ int? selected;
+ bool checked=false;
+ @override Widget build(BuildContext context){
+  final passage=readingPassages[index];
+  return Scaffold(
+   appBar:AppBar(title:const Text('Okuma Bahçesi')),
+   body:ListView(padding:const EdgeInsets.all(18),children:[
+    const Text('Oku, dinle ve anladığını göster.',style:TextStyle(fontSize:16)),
+    const SizedBox(height:12),
+    Wrap(spacing:8,children:List.generate(readingPassages.length,(i)=>ChoiceChip(
+     label:Text('Hikâye ${i+1}'),
+     selected:index==i,
+     onSelected:(_)=>setState((){index=i;selected=null;checked=false;}),
+    ))),
+    const SizedBox(height:14),
+    Card(child:Padding(padding:const EdgeInsets.all(20),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+     Text(passage.title,style:const TextStyle(fontSize:23,fontWeight:FontWeight.w900,color:Color(0xff3977c3))),
+     const SizedBox(height:14),
+     Text(passage.body,style:const TextStyle(fontSize:21,height:1.65,fontWeight:FontWeight.w500)),
+     const SizedBox(height:14),
+     FilledButton.icon(onPressed:()=>speak(passage.body),icon:const Icon(Icons.volume_up),label:const Text('Hikâyeyi dinle')),
+    ]))),
+    const SizedBox(height:12),
+    Text(passage.question,style:const TextStyle(fontSize:20,fontWeight:FontWeight.w900)),
+    const SizedBox(height:8),
+    ...List.generate(passage.options.length,(i)=>Card(
+     color:checked&&i==passage.answer?const Color(0xffdff4e6):checked&&i==selected?const Color(0xffffdddd):Colors.white,
+     child:RadioListTile<int>(
+      value:i,
+      groupValue:selected,
+      onChanged:checked?null:(v)=>setState(()=>selected=v),
+      title:Text(passage.options[i],style:const TextStyle(fontSize:17)),
+     ),
+    )),
+    const SizedBox(height:12),
+    if(!checked) FilledButton(onPressed:selected==null?null:()=>setState(()=>checked=true),child:const Text('Cevabımı kontrol et')),
+    if(checked) ...[
+     Text(selected==passage.answer?'Harika! Hikâyeyi dikkatle okudun.':'Bir kez daha oku ve cevabı yeniden düşün.',style:TextStyle(fontSize:16,fontWeight:FontWeight.bold,color:selected==passage.answer?Colors.green:Colors.deepOrange)),
+     const SizedBox(height:8),
+     OutlinedButton(onPressed:()=>setState(()=>{selected=null;checked=false;}),child:const Text('Tekrar dene')),
+    ],
+   ]),
+  );
+ }
 }
 class Games extends StatefulWidget{
  final Set<String> completed;
