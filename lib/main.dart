@@ -28,6 +28,10 @@ const themeNames = [
  'Çevremizdeki Yaşam',
  'Yol Arkadaşımız Kitaplar',
 ];
+String upperLetter(String letter) => const {
+ 'i':'İ','ı':'I','ö':'Ö','ü':'Ü','ç':'Ç','ş':'Ş','ğ':'Ğ',
+ }[letter] ?? upperLetter(letter);
+
 const words = [
  ['an','ana','anne','at','et','ten','net','nane'],
  ['Ela','Ali','el','al','tel','nine','okul','ot','kek','kule','kutu','un','kola'],
@@ -113,7 +117,7 @@ class _GroupScreenState extends State<GroupScreen>{
    const SizedBox(height:16),
    GridView.count(shrinkWrap:true,physics:const NeverScrollableScrollPhysics(),crossAxisCount:3,childAspectRatio:.9,children:groups[widget.index].map((l)=>Card(child:InkWell(borderRadius:BorderRadius.circular(20),onTap:()=>Navigator.push(context,MaterialPageRoute(builder:(_)=>LetterScreen(letter:l,onDone:()async{await markDone(l);await refresh();widget.onDone();}))),child:Column(mainAxisAlignment:MainAxisAlignment.center,children:[
     Text(l,style:const TextStyle(fontSize:52,fontWeight:FontWeight.w900,color:Color(0xff3977c3))),
-    Text(l.toUpperCase()),Icon(done.contains(l)?Icons.check_circle:Icons.play_circle_outline,color:done.contains(l)?Colors.green:Colors.grey),
+    Text(upperLetter(l)),Icon(done.contains(l)?Icons.check_circle:Icons.play_circle_outline,color:done.contains(l)?Colors.green:Colors.grey),
    ])))).toList()),
    const SizedBox(height:16),
    FilledButton.icon(onPressed:()=>Navigator.push(context,MaterialPageRoute(builder:(_)=>WordScreen(index:widget.index))),icon:const Icon(Icons.menu_book),label:const Text('Kelime oku')),
@@ -239,7 +243,7 @@ class _WritingState extends State<Writing>{
   ChoiceChip(label:const Text('Büyük harf'),selected:uppercase,onSelected:(_)=>setState(()=>uppercase=true)),
  ]),
  Container(height:320,margin:const EdgeInsets.symmetric(vertical:14),decoration:BoxDecoration(color:Colors.white,borderRadius:BorderRadius.circular(22),border:Border.all(color:Colors.blueGrey.shade100)),
- child:LayoutBuilder(builder:(c,box)=>GestureDetector(onPanUpdate:(d)=>setState(()=>points.add(d.localPosition)),onPanEnd:(_)=>setState(()=>points.add(null)),child:CustomPaint(size:Size(box.maxWidth,box.maxHeight),painter:TracePainter(uppercase?letter.toUpperCase():letter,points))))),
+ child:LayoutBuilder(builder:(c,box)=>GestureDetector(onPanUpdate:(d)=>setState(()=>points.add(d.localPosition)),onPanEnd:(_)=>setState(()=>points.add(null)),child:CustomPaint(size:Size(box.maxWidth,box.maxHeight),painter:TracePainter(uppercase?upperLetter(letter):letter,points))))),
  OutlinedButton.icon(onPressed:()=>setState(()=>points.clear()),icon:const Icon(Icons.refresh),label:const Text('Yeniden yaz')),
  FilledButton.icon(onPressed:()=>speak('Şimdi ${uppercase?'büyük':'küçük'} $letter harfini yazıyoruz.'),icon:const Icon(Icons.volume_up),label:const Text('Yazılışı dinle')),
  ]);
