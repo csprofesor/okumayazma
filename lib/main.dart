@@ -16,7 +16,7 @@ const words = [
  ['an','ana','anne','Ela','Ali','at','el','al','tel','nine','nane'],
  ['okul','orman','kola','kule','mum','nar','limon','motor'],
  ['üzüm','süt','söz','yüz','deniz','zeytin'],
- ['çilek','çorap','bal','bebek','gemi','çiçek','şeker'],
+ ['çilek','çok','bal','bebek','gemi','çiçek','şeker'],
  ['papatya','harita','vazo','fırın','yağmur','jilet'],
 ];
 final tts = FlutterTts();
@@ -121,9 +121,9 @@ class LetterScreen extends StatelessWidget{
 }
 const examples={
  'a':['ana','at','al'],'n':['anne','nine','nane'],'e':['el','Ela','et'],'t':['at','tel','tat'],'i':['ile','Ali','il'],'l':['lale','el','Ali'],
- 'o':['okul','ot','orman'],'k':['kek','kedi','okul'],'u':['un','kutu','uçak'],'r':['nar','ar','ır'],'ı':['ışık','ırmak'],'m':['mum','masa','limon'],
- 'ü':['üzüm','süt','ütü'],'s':['su','sarı','ses'],'ö':['ördek','ödev','göz'],'y':['yol','yemek','ay'],'d':['dut','deniz','dede'],'z':['zil','zeytin','üzüm'],
- 'ç':['çilek','çiçek','çorap'],'b':['bal','bebek','bal'],'g':['gemi','göz','gül'],'c':['cam','ceviz','ceket'],'ş':['şapka','şeker','kuş'],
+ 'o':['okul','ot','orman'],'k':['kek','kedi','okul'],'u':['un','kutu','mum'],'r':['nar','ar','ır'],'ı':['ışık','ırmak'],'m':['mum','masa','limon'],
+ 'ü':['üzüm','süt','ütü'],'s':['su','sarı','ses'],'ö':['ördek','ön','öz'],'y':['yol','yemek','ay'],'d':['dut','deniz','dede'],'z':['zil','zeytin','üzüm'],
+ 'ç':['çilek','çiçek','çok'],'b':['bal','bebek','bal'],'g':['gemi','göz','gül'],'c':['cam','ceviz','ceket'],'ş':['şeker','kuş','şişe'],
  'p':['para','papatya','ip'],'h':['halı','horoz','hava'],'v':['vazo','ev','vişne'],'ğ':['dağ','yağmur','soğan'],'f':['fırın','fil','fare'],'j':['jet','judo','jilet']
 };
 Widget illustration(String word){
