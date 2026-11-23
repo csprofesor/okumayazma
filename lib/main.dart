@@ -98,7 +98,7 @@ class _HomeState extends State<Home> {
    onTap:unlocked?()=>Navigator.push(context,MaterialPageRoute(builder:(_)=>GroupScreen(index:i,onDone:load))):null,
   ));}),
   const SizedBox(height:18),const Text('Hızlı erişim',style:TextStyle(fontSize:20,fontWeight:FontWeight.bold)),
-  Row(children:[Expanded(child:Card(child:ListTile(leading:const Icon(Icons.hearing,color:Colors.orange),title:const Text('Harf oyunu'),onTap:()=>setState(()=>tab=1)))),Expanded(child:Card(child:ListTile(leading:const Icon(Icons.gesture,color:Colors.green),title:const Text('Yazı atölyesi'),onTap:()=>setState(()=>tab=2))))]),
+  Row(children:[Expanded(child:Card(child:ListTile(leading:const Icon(Icons.hearing,color:Colors.orange),title:const Text('Harf ve kelime oyunları'),onTap:()=>setState(()=>tab=1)))),Expanded(child:Card(child:ListTile(leading:const Icon(Icons.gesture,color:Colors.green),title:const Text('Yazı atölyesi'),onTap:()=>setState(()=>tab=2))))]),
  ]);
 }
 class GroupScreen extends StatefulWidget{
