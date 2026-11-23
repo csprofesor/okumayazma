@@ -45,4 +45,23 @@ void main() {
       }
     }
   });
+  test('letter example cards do not reveal future letters', () {
+    for (var i = 0; i < groups.length; i++) {
+      final learned = groups.take(i + 1).expand((g) => g).toSet();
+      for (final letter in groups[i]) {
+        for (final example in examples[letter] ?? const <String>[]) {
+          final normalized = example.toLowerCase().replaceAll(
+            RegExp(r'[^a-zçğıöşü]'),
+            '',
+          );
+          expect(
+            normalized.split('').every(learned.contains),
+            isTrue,
+            reason: 'Stage ${i + 1}, letter $letter: $example',
+          );
+        }
+      }
+    }
+  });
+
 }
