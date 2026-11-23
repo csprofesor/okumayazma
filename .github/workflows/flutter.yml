@@ -21,4 +21,10 @@ jobs:
       - run: flutter analyze
       - run: flutter test
       - run: flutter build web
-      - run: flutter build apk --debug
+      - name: Build Android APK
+        run: |
+          if ! flutter build apk --debug; then
+            ERR=$(flutter build apk --debug -v 2>&1 | grep -A 15 -E '(FAILURE: Build failed|\* What went wrong:)' | head -n 20 | tr '\r\n' ' ')
+            echo "::error title=APK Build Error::$ERR"
+            exit 1
+          fi
