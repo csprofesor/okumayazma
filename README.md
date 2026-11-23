@@ -41,11 +41,11 @@ Uygulama öğretmenin, resmî programın veya güncel ders kitabının yerine ge
 Flutter 3.24+ ve Dart 3.3+ gerekir.
 
 ```bash
-flutter pub get
+bash tool/bootstrap.sh
 flutter run
 ```
 
-Android/iOS mağaza paketleri için platform klasörleri, imzalama, uygulama kimliği, mağaza görselleri, gizlilik beyanı ve gerçek cihaz testleri tamamlanmalıdır.
+\`bash tool/bootstrap.sh\` komutu Android/iOS yerel proje klasörlerini üretir ve paketleri indirir. Android/iOS mağaza paketleri için imzalama, uygulama kimliği, mağaza görselleri, gizlilik beyanı ve gerçek cihaz testleri ayrıca tamamlanmalıdır.
 
 ## Telif ve içerik ilkeleri
 - Harf kartları, örnek kelimeler, cümleler, ekran tasarımı ve etkinlik mantığı bu proje için özgün hazırlanır.
