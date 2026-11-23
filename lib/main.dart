@@ -120,10 +120,10 @@ class LetterScreen extends StatelessWidget{
  }
 }
 const examples={
- 'a':['ana','at','araba'],'n':['anne','nine','nane'],'e':['el','Ela','ev'],'t':['at','tel','tat'],'i':['ip','inek','iki'],'l':['lale','el','Ali'],
- 'o':['okul','ot','orman'],'k':['kek','kedi','okul'],'u':['un','kutu','uçak'],'r':['arı','nar','araba'],'ı':['ışık','ırmak'],'m':['mum','masa','limon'],
+ 'a':['ana','at','al'],'n':['anne','nine','nane'],'e':['el','Ela','et'],'t':['at','tel','tat'],'i':['ile','Ali','il'],'l':['lale','el','Ali'],
+ 'o':['okul','ot','orman'],'k':['kek','kedi','okul'],'u':['un','kutu','uçak'],'r':['nar','ar','ır'],'ı':['ışık','ırmak'],'m':['mum','masa','limon'],
  'ü':['üzüm','süt','ütü'],'s':['su','sarı','ses'],'ö':['ördek','ödev','göz'],'y':['yol','yemek','ay'],'d':['dut','deniz','dede'],'z':['zil','zeytin','üzüm'],
- 'ç':['çilek','çiçek','çorap'],'b':['bal','bebek','balık'],'g':['gemi','göz','gül'],'c':['cam','ceviz','ceket'],'ş':['şapka','şeker','kuş'],
+ 'ç':['çilek','çiçek','çorap'],'b':['bal','bebek','bal'],'g':['gemi','göz','gül'],'c':['cam','ceviz','ceket'],'ş':['şapka','şeker','kuş'],
  'p':['para','papatya','ip'],'h':['halı','horoz','hava'],'v':['vazo','ev','vişne'],'ğ':['dağ','yağmur','soğan'],'f':['fırın','fil','fare'],'j':['jet','judo','jilet']
 };
 String emoji(String w){
@@ -132,10 +132,31 @@ String emoji(String w){
  if(w.contains('çilek'))return '🍓';if(w.contains('üzüm'))return '🍇';if(w.contains('çiçek'))return '🌼';
  if(w.contains('balık'))return '🐟';if(w.contains('araba'))return '🚗';if(w.contains('okul'))return '🏫';return '🔤';
 }
+const syllables=[
+ ['an','en','et','al','el','il','at','it','la','na','ne','te'],
+ ['ok','ol','on','un','ur','ar','ır','im','om','mur','kal','kol'],
+ ['süt','söz','yüz','düz','saz','sor','dur','üz','öz','yol','dön'],
+ ['bal','baş','gel','gül','çel','çok','kaç','baş','göz','güç'],
+ ['fil','far','var','yap','par','fır','pır','jilet','vapur','pala'],
+];
+const sentences=[
+ 'Ela el ele.',
+ 'Ali okula iner.',
+ 'Dede üzüm alır.',
+ 'Çilek çok tatlı.',
+ 'Pelin harita yapar.',
+];
 class WordScreen extends StatelessWidget{
  final int index;const WordScreen({super.key,required this.index});
  @override Widget build(BuildContext context)=>Scaffold(appBar:AppBar(title:const Text('Kelime zamanı')),body:ListView(padding:const EdgeInsets.all(18),children:[
  const Text('Kelimeye dokun ve dinle. Sonra kendin okumayı dene.',style:TextStyle(fontSize:16)),
+ const SizedBox(height:14),
+ const Text('Hece çalışması',style:TextStyle(fontSize:20,fontWeight:FontWeight.bold)),
+ Wrap(spacing:8,runSpacing:8,children:syllables[index].map((s)=>ActionChip(label:Text(s,style:const TextStyle(fontSize:19,fontWeight:FontWeight.bold)),onPressed:()=>speak(s))).toList()),
+ const SizedBox(height:16),
+ const Text('Cümle okuyorum',style:TextStyle(fontSize:20,fontWeight:FontWeight.bold)),
+ Card(child:ListTile(title:Text(sentences[index],style:const TextStyle(fontSize:20,fontWeight:FontWeight.bold)),trailing:IconButton(onPressed:()=>speak(sentences[index]),icon:const Icon(Icons.volume_up)))),
+ const SizedBox(height:12),
  ...words[index].map((w)=>Card(child:ListTile(leading:Text(emoji(w),style:const TextStyle(fontSize:28)),title:Text(w,style:const TextStyle(fontSize:24,fontWeight:FontWeight.bold)),trailing:IconButton(onPressed:()=>speak(w),icon:const Icon(Icons.volume_up))))),
  ]));
 }
