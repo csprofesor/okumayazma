@@ -713,9 +713,7 @@ class _ReadingPageState extends State<ReadingPage> {
                           : Colors.white,
                   child: RadioListTile<int>(
                     value: i,
-                    // ignore: deprecated_member_use
                     groupValue: selected,
-                    // ignore: deprecated_member_use
                     onChanged:
                         checked ? null : (v) => setState(() => selected = v),
                     title: Text(passage.options[i],
