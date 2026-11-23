@@ -22,6 +22,12 @@ const groups = [
  ['r','ı','m','ü','s','ö','y','d','z'],
  ['ç','b','g','c','ş','p','h','v','ğ','f','j'],
 ];
+const themeNames = [
+ 'Güzel Davranışlarımız',
+ 'Mustafa Kemal’den Atatürk’e',
+ 'Çevremizdeki Yaşam',
+ 'Yol Arkadaşımız Kitaplar',
+];
 const words = [
  ['an','ana','anne','at','et','ten','net','nane'],
  ['Ela','Ali','el','al','tel','nine','okul','ot','kek','kule','kutu','un','kola'],
@@ -83,7 +89,7 @@ class _HomeState extends State<Home> {
   ])),
   const SizedBox(height:22),const Text('Öğrenme yolculuğum',style:TextStyle(fontSize:21,fontWeight:FontWeight.w900)),
   ...List.generate(groups.length,(i){ final unlocked=i==0||groups.take(i).every((g)=>g.every(done.contains)); final count=groups[i].where(done.contains).length; return Card(margin:const EdgeInsets.only(top:10),child:ListTile(
-   leading:CircleAvatar(child:unlocked?Text('${i+1}'):const Icon(Icons.lock_outline)),title:Text('${i+1}. Öğrenme Aşaması',style:const TextStyle(fontWeight:FontWeight.bold)),
+   leading:CircleAvatar(child:unlocked?Text('${i+1}'):const Icon(Icons.lock_outline)),title:Text('Tema ${i+1}: ${themeNames[i]}',style:const TextStyle(fontWeight:FontWeight.bold)),
    subtitle:Text('${groups[i].join('  ·  ')}  •  $count/${groups[i].length}'),trailing:Icon(unlocked?Icons.chevron_right:Icons.lock_outline),
    onTap:unlocked?()=>Navigator.push(context,MaterialPageRoute(builder:(_)=>GroupScreen(index:i,onDone:load))):null,
   ));}),
@@ -101,7 +107,7 @@ class _GroupScreenState extends State<GroupScreen>{
  @override void initState(){super.initState();refresh();}
  Future<void> refresh()async{done=await readProgress();if(mounted)setState((){});}
  @override Widget build(BuildContext context)=>Scaffold(
-  appBar:AppBar(title:Text('${widget.index+1}. Öğrenme Aşaması')),
+  appBar:AppBar(title:Text('Tema ${widget.index+1}')),
   body:ListView(padding:const EdgeInsets.all(18),children:[
    const Text('Harfleri sırayla öğren. Harf adına dokunarak dinle; kelimeleri de sesli tekrar et.',style:TextStyle(fontSize:16)),
    const SizedBox(height:16),
