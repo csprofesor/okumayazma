@@ -275,7 +275,7 @@ class _ReadingPageState extends State<ReadingPage>{
     if(checked) ...[
      Text(selected==passage.answer?'Harika! Hikâyeyi dikkatle okudun.':'Bir kez daha oku ve cevabı yeniden düşün.',style:TextStyle(fontSize:16,fontWeight:FontWeight.bold,color:selected==passage.answer?Colors.green:Colors.deepOrange)),
      const SizedBox(height:8),
-     OutlinedButton(onPressed:()=>setState(()=>{selected=null;checked=false;}),child:const Text('Tekrar dene')),
+     OutlinedButton(onPressed:()=>setState((){selected=null;checked=false;}),child:const Text('Tekrar dene')),
     ],
    ]),
   );
