@@ -197,8 +197,22 @@ class Games extends StatefulWidget{
  @override State<Games> createState()=>_GamesState();
 }
 class _GamesState extends State<Games>{
- final rng=Random();late String target;late List<String> options;int score=0;int? picked; late List<String> available;
- @override void initState(){super.initState();available=unlockedLetters();prepareQuestion();}
+ final rng=Random();
+ late String target;
+ late List<String> options;
+ late List<String> wordOptions;
+ late List<String> available;
+ int score=0;
+ int? picked;
+ bool wordMode=false;
+ String? selectedWord;
+ String? correctWord;
+
+ @override void initState(){
+  super.initState();
+  available=unlockedLetters();
+  prepareQuestion();
+ }
  @override void didUpdateWidget(covariant Games oldWidget){
   super.didUpdateWidget(oldWidget);
   if(oldWidget.completed.length!=widget.completed.length||!oldWidget.completed.containsAll(widget.completed)){
@@ -214,20 +228,114 @@ class _GamesState extends State<Games>{
   }
   return result;
  }
+ int unlockedStageCount(){
+  var count=1;
+  for(var i=0;i<groups.length-1;i++){
+   if(groups[i].every(widget.completed.contains)) count=i+2;
+   else break;
+  }
+  return count;
+ }
  void prepareQuestion(){
   target=available[rng.nextInt(available.length)];
   options=[target];
-  while(options.length<4){final x=available[rng.nextInt(available.length)];if(!options.contains(x))options.add(x);}
-  options.shuffle();picked=null;
+  while(options.length<4){
+   final x=available[rng.nextInt(available.length)];
+   if(!options.contains(x))options.add(x);
+  }
+  options.shuffle();
+  final pool=words.take(unlockedStageCount()).expand((stage)=>stage).toList();
+  final correct=pool.where((w)=>w.toLowerCase().contains(target)).toList();
+  final wrong=pool.where((w)=>!w.toLowerCase().contains(target)).toList()..shuffle(rng);
+  if(correct.isNotEmpty&&wrong.isNotEmpty){
+   correctWord=correct[rng.nextInt(correct.length)];
+   wordOptions=[correctWord!,...wrong.take(3)]..shuffle(rng);
+  }else{
+   correctWord=null;
+   wordOptions=[];
+  }
+  picked=null;
+  selectedWord=null;
  }
  void next(){prepareQuestion();setState((){});}
  @override Widget build(BuildContext context)=>ListView(padding:const EdgeInsets.all(20),children:[
- const Text('Harf adını dinle ve doğru harfi bul!',style:TextStyle(fontSize:23,fontWeight:FontWeight.w900)),
- Text('Puanın: $score'),const SizedBox(height:20),
- Container(height:130,decoration:BoxDecoration(color:const Color(0xffffefd9),borderRadius:BorderRadius.circular(24)),child:IconButton(iconSize:60,onPressed:()=>speak(target),icon:const Icon(Icons.volume_up))),
- const SizedBox(height:18),
- GridView.count(shrinkWrap:true,physics:const NeverScrollableScrollPhysics(),crossAxisCount:2,children:options.map((x)=>Card(color:picked!=null&&x==target?const Color(0xffdff4e6):picked!=null&&options.indexOf(x)==picked?const Color(0xffffdddd):Colors.white,child:InkWell(onTap:picked!=null?null:(){setState((){picked=options.indexOf(x);if(x==target)score++;});speak(x==target?'Aferin, doğru!':'Tekrar dinleyelim.');},child:Center(child:Text(x,style:const TextStyle(fontSize:62,fontWeight:FontWeight.w900)))))).toList()),
- const SizedBox(height:16),FilledButton(onPressed:picked==null?()=>speak(target):next,child:Text(picked==null?'Sesi tekrar dinle':'Sonraki soru')),
+  const Text('Öğrenme oyunları',style:TextStyle(fontSize:23,fontWeight:FontWeight.w900)),
+  const SizedBox(height:12),
+  SegmentedButton<bool>(
+   segments:const [
+    ButtonSegment(value:false,label:Text('Harf bul'),icon:Icon(Icons.abc_rounded)),
+    ButtonSegment(value:true,label:Text('Kelimeyi bul'),icon:Icon(Icons.image_search_rounded)),
+   ],
+   selected:{wordMode},
+   onSelectionChanged:(value){setState((){wordMode=value.first;prepareQuestion();});},
+  ),
+  const SizedBox(height:16),
+  Text(wordMode?'İçinde bu harf bulunan kelimeyi seç.':'Harf adını dinle ve doğru harfi bul!',style:const TextStyle(fontSize:18,fontWeight:FontWeight.w800)),
+  Text('Puanın: $score',style:const TextStyle(color:Colors.black54)),
+  const SizedBox(height:16),
+  Container(
+   height:125,
+   decoration:BoxDecoration(color:const Color(0xffffefd9),borderRadius:BorderRadius.circular(24)),
+   child:Center(child:wordMode
+    ?Text(target,style:const TextStyle(fontSize:76,fontWeight:FontWeight.w900,color:Color(0xff3977c3)))
+    :IconButton(iconSize:60,onPressed:()=>speak(target),icon:const Icon(Icons.volume_up))),
+  ),
+  if(wordMode) ...[
+   const SizedBox(height:8),
+   Center(child:Text('“${upperLetter(target)}” harfini içeren resmi seç.',style:const TextStyle(fontWeight:FontWeight.w600))),
+   const SizedBox(height:12),
+   if(wordOptions.isNotEmpty) GridView.count(
+    shrinkWrap:true,
+    physics:const NeverScrollableScrollPhysics(),
+    crossAxisCount:2,
+    crossAxisSpacing:10,
+    mainAxisSpacing:10,
+    childAspectRatio:1.25,
+    children:wordOptions.map((w)=>Card(
+     color:selectedWord!=null&&w==correctWord?const Color(0xffdff4e6):selectedWord==w?const Color(0xffffdddd):Colors.white,
+     child:InkWell(
+      borderRadius:BorderRadius.circular(18),
+      onTap:selectedWord!=null?null:(){
+       setState((){selectedWord=w;if(w==correctWord)score++;});
+       speak(w==correctWord?'Aferin! Bu kelimede ${upperLetter(target)} harfi var.':'Bir daha inceleyelim.');
+      },
+      child:Column(mainAxisAlignment:MainAxisAlignment.center,children:[
+       illustration(w),
+       const SizedBox(height:6),
+       Text(w,style:const TextStyle(fontSize:21,fontWeight:FontWeight.w800)),
+      ]),
+     ),
+    )).toList(),
+   ) else const Text('Bu harf için yeterli kelime henüz açılmadı.'),
+  ] else ...[
+   const SizedBox(height:18),
+   GridView.count(
+    shrinkWrap:true,
+    physics:const NeverScrollableScrollPhysics(),
+    crossAxisCount:2,
+    crossAxisSpacing:12,
+    mainAxisSpacing:12,
+    children:options.map((x)=>Card(
+     color:picked!=null&&x==target?const Color(0xffdff4e6):picked!=null&&options.indexOf(x)==picked?const Color(0xffffdddd):Colors.white,
+     child:InkWell(
+      onTap:picked!=null?null:(){
+       setState((){picked=options.indexOf(x);if(x==target)score++;});
+       speak(x==target?'Aferin, doğru!':'Tekrar dinleyelim.');
+      },
+      child:Center(child:Text(x,style:const TextStyle(fontSize:62,fontWeight:FontWeight.w900))),
+     ),
+    )).toList(),
+   ),
+  ],
+  const SizedBox(height:16),
+  FilledButton(
+   onPressed:wordMode
+    ?(selectedWord==null?()=>speak('${upperLetter(target)} harfini içeren kelimeyi bul.'):next)
+    :(picked==null?()=>speak(target):next),
+   child:Text(wordMode
+    ?(selectedWord==null?'Yönergeyi dinle':'Sonraki soru')
+    :(picked==null?'Harf adını dinle':'Sonraki soru')),
+  ),
  ]);
 }
 class Writing extends StatefulWidget{const Writing({super.key});@override State<Writing> createState()=>_WritingState();}
