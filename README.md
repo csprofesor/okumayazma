@@ -10,6 +10,7 @@
 - Hece, kelime ve cümle alıştırmaları yalnızca o aşamada öğrenilmiş harflerle sınırlıdır.
 - Dinle ve harfi bul oyunu ile harfi içeren kelimeyi görselden seçme oyunu yalnızca açılmış aşamalardaki içerikleri kullanır.
 - Küçük/büyük harf seçilebilen parmakla yazma alanı, özgün Material ikonlu kelime kartları ve veli bilgilendirme ekranı içerir.
+- Tüm harfler tamamlanınca üç özgün kısa hikâye ve çoktan seçmeli okuduğunu anlama soruları açılır.
 - İlerleme SharedPreferences ile cihazda tutulur; hesap ve sunucu gerektirmez.
 
 ## Müfredat eşleştirmesi
@@ -63,6 +64,7 @@ flutter run
 - [ ] Harflerin doğru yazım yönlerini gösteren adım adım animasyonlar
 - [ ] Görselden ses bulma ve kelime içindeki sesin konumunu seçme etkinlikleri
 - [ ] Rakam öğretimi ve hazırlık çalışmaları
+- [x] İlk kısa metinler ve okuduğunu anlama soruları
 - [ ] Daha geniş seviyelendirilmiş kısa metin ve dinlediğini anlama modülü
 - [ ] Gerçek Android/iPhone cihazlarında TTS, çizim ve erişilebilirlik testi
 - [ ] Android/iOS platform projeleri, bundle ID ve imzalama
