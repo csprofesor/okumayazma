@@ -75,7 +75,7 @@ class _HomeState extends State<Home> {
   const SizedBox(height:22),const Text('Öğrenme yolculuğum',style:TextStyle(fontSize:21,fontWeight:FontWeight.w900)),
   ...List.generate(5,(i){ final unlocked=i==0||groups.take(i).every((g)=>g.every(done.contains)); final count=groups[i].where(done.contains).length; return Card(margin:const EdgeInsets.only(top:10),child:ListTile(
    leading:CircleAvatar(child:Icon(unlocked?Icons.looks_one:Icons.lock_outline)),title:Text('${i+1}. Ses Grubu',style:const TextStyle(fontWeight:FontWeight.bold)),
-   subtitle:Text('${groups[i].join('  ·  ')}  •  $count/\${groups[i].length}'),trailing:Icon(unlocked?Icons.chevron_right:Icons.lock_outline),
+   subtitle:Text('${groups[i].join('  ·  ')}  •  $count/${groups[i].length}'),trailing:Icon(unlocked?Icons.chevron_right:Icons.lock_outline),
    onTap:unlocked?()=>Navigator.push(context,MaterialPageRoute(builder:(_)=>GroupScreen(index:i,onDone:load))):null,
   ));}),
   const SizedBox(height:18),const Text('Hızlı erişim',style:TextStyle(fontSize:20,fontWeight:FontWeight.bold)),
