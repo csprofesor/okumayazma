@@ -131,7 +131,7 @@ class LetterScreen extends StatelessWidget{
 }
 const examples={
  'a':['ana','at','an'],'n':['anne','nane','net'],'e':['et','ten','net'],'t':['at','et','ten'],'i':['ile','Ali','il'],'l':['lale','el','Ali'],
- 'o':['okul','ot','orman'],'k':['kek','okul','kola'],'u':['un','kutu','kul'],'r':['nar','ar','ır'],'ı':['ırmak','sarı','alır'],'m':['mum','masa','limon'],
+ 'o':['okul','ot','on'],'k':['kek','okul','kola'],'u':['un','kutu','kul'],'r':['nar','ar','ır'],'ı':['ırmak','sarı','alır'],'m':['mum','masa','limon'],
  'ü':['üzüm','süt','ütü'],'s':['su','sarı','ses'],'ö':['ördek','ön','öz'],'y':['yol','yemek','ay'],'d':['dut','deniz','dede'],'z':['zil','zeytin','üzüm'],
  'ç':['çilek','çiçek','çok'],'b':['bal','bebek','bal'],'g':['gemi','göz','gül'],'c':['cam','ceviz','ceket'],'ş':['şeker','kuş','şişe'],
  'p':['para','papatya','ip'],'h':['halı','horoz','hava'],'v':['vazo','ev','vişne'],'ğ':['dağ','yağmur','soğan'],'f':['fırın','fil','fare'],'j':['jet','judo','jilet']
