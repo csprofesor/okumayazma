@@ -71,4 +71,18 @@ void main() {
     }
   });
 
+  test('reading passages are original and use the full taught alphabet', () {
+    expect(readingPassages.length, 3);
+    final learned = officialSoundGroups.expand((g) => g).toSet();
+    for (final passage in readingPassages) {
+      final text = '${passage.title} ${passage.body} ${passage.question} ${passage.options.join(' ')}';
+      final normalized = text.toLowerCase().replaceAll(
+        RegExp(r'[^a-zçğıöşü]'),
+        '',
+      );
+      expect(normalized.split('').every(learned.contains), isTrue);
+      expect(passage.answer, inInclusiveRange(0, passage.options.length - 1));
+    }
+  });
+
 }
