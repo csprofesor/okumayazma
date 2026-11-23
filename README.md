@@ -6,7 +6,10 @@
 - Beş ses grubunu Türkiye Yüzyılı Maarif Modeli'ndeki sırayla sunar.
 - Harf ekranlarında büyük/küçük harf, seslendirme ve örnek kelimeler bulunur.
 - Cihazın Türkçe metin-seslendirme motorunu kullanır; uygulamaya üçüncü taraf ses kaydı eklenmez.
-- Dinle ve harfi bul oyunu, parmakla yazma alanı, kelime okuma ve veli bilgilendirme ekranı içerir.
+- Gruplar sırayla açılır; sonraki gruba geçmek için önceki grubun harfleri tamamlanmalıdır.
+- Hece, kelime ve kısa cümle alıştırmaları her grubun öğrenilmiş harfleriyle sınırlandırılır.
+- Dinle ve harfi bul oyunu yalnızca açılmış gruplardaki harfleri kullanır.
+- Parmakla yazma alanı, özgün Material ikonlu kelime kartları ve veli bilgilendirme ekranı içerir.
 - İlerleme SharedPreferences ile cihazda tutulur; hesap ve sunucu gerektirmez.
 
 ## Müfredat
@@ -39,7 +42,8 @@ Android/iOS mağaza paketleri için platform klasörleri, imzalama, uygulama kim
 ## Yayın öncesi yapılacaklar
 - [ ] Öğretmen incelemesi ve içerik doğrulaması
 - [ ] Ses/harf/kelime eşleşmelerinin pedagojik kontrolü
-- [ ] Hece, cümle ve kısa metin modüllerinin tamamlanması
+- [x] İlk hece, kelime ve kısa cümle alıştırmalarının eklenmesi
+- [ ] Daha geniş seviyelendirilmiş kısa metin modülünün hazırlanması
 - [ ] Gerçek Android/iPhone cihazlarında TTS, çizim ve erişilebilirlik testi
 - [ ] Android/iOS platform projeleri, bundle ID ve imzalama
 - [ ] Uygulama ikonu, ekran görüntüleri ve mağaza açıklamaları
