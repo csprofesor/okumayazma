@@ -114,7 +114,7 @@ class LetterScreen extends StatelessWidget{
    Container(height:180,decoration:BoxDecoration(color:const Color(0xffe7f1ff),borderRadius:BorderRadius.circular(24)),child:Center(child:Text(letter,style:const TextStyle(fontSize:125,fontWeight:FontWeight.w900,color:Color(0xff3977c3))))),
    const SizedBox(height:14),FilledButton.icon(onPressed:()=>speak('Bu harfin adı: ${letter.toUpperCase()}. Küçük harfi: $letter.'),icon:const Icon(Icons.volume_up),label:const Text('Harf adını dinle')),
    const SizedBox(height:20),const Text('Bu ses hangi kelimelerde var?',style:TextStyle(fontSize:20,fontWeight:FontWeight.bold)),
-   ...samples.map((w)=>Card(child:ListTile(leading:Text(emoji(w),style:const TextStyle(fontSize:27)),title:Text(w,style:const TextStyle(fontSize:23,fontWeight:FontWeight.bold)),trailing:IconButton(icon:const Icon(Icons.volume_up),onPressed:()=>speak(w))))),
+   ...samples.map((w)=>Card(child:ListTile(leading:illustration(w),title:Text(w,style:const TextStyle(fontSize:23,fontWeight:FontWeight.bold)),trailing:IconButton(icon:const Icon(Icons.volume_up),onPressed:()=>speak(w))))),
    const SizedBox(height:14),FilledButton(onPressed:()async{await onDone();if(context.mounted)Navigator.pop(context);},child:const Text('Bu sesi öğrendim')),
   ]));
  }
@@ -126,12 +126,25 @@ const examples={
  'ç':['çilek','çiçek','çorap'],'b':['bal','bebek','bal'],'g':['gemi','göz','gül'],'c':['cam','ceviz','ceket'],'ş':['şapka','şeker','kuş'],
  'p':['para','papatya','ip'],'h':['halı','horoz','hava'],'v':['vazo','ev','vişne'],'ğ':['dağ','yağmur','soğan'],'f':['fırın','fil','fare'],'j':['jet','judo','jilet']
 };
-String emoji(String w){
- if(w.contains('anne')||w.contains('ana'))return '👩';
- if(w.contains('at'))return '🐎';if(w.contains('inek'))return '🐄';if(w.contains('ördek'))return '🦆';
- if(w.contains('çilek'))return '🍓';if(w.contains('üzüm'))return '🍇';if(w.contains('çiçek'))return '🌼';
- if(w.contains('balık'))return '🐟';if(w.contains('araba'))return '🚗';if(w.contains('okul'))return '🏫';return '🔤';
+Widget illustration(String word){
+ IconData icon=Icons.auto_awesome_rounded;
+ if(word.contains('anne')||word.contains('ana')) icon=Icons.family_restroom_rounded;
+ else if(word.contains('at')) icon=Icons.pets_rounded;
+ else if(word.contains('ördek')||word.contains('balık')) icon=Icons.flutter_dash_rounded;
+ else if(word.contains('çilek')||word.contains('üzüm')) icon=Icons.eco_rounded;
+ else if(word.contains('çiçek')||word.contains('papatya')) icon=Icons.local_florist_rounded;
+ else if(word.contains('araba')) icon=Icons.directions_car_rounded;
+ else if(word.contains('okul')) icon=Icons.school_rounded;
+ else if(word.contains('ev')||word.contains('kule')) icon=Icons.home_rounded;
+ else if(word.contains('uçak')) icon=Icons.flight_rounded;
+ else if(word.contains('su')||word.contains('süt')) icon=Icons.water_drop_rounded;
+ else if(word.contains('vazo')) icon=Icons.local_florist_rounded;
+ else if(word.contains('gemi')||word.contains('vapur')) icon=Icons.directions_boat_rounded;
+ else if(word.contains('göz')) icon=Icons.visibility_rounded;
+ else if(word.contains('şapka')||word.contains('çorap')) icon=Icons.checkroom_rounded;
+ return Container(width:48,height:48,decoration:BoxDecoration(color:const Color(0xffffefd9),borderRadius:BorderRadius.circular(15)),child:Icon(icon,size:27,color:const Color(0xff3977c3)));
 }
+
 const syllables=[
  ['an','en','et','al','el','il','at','it','la','na','ne','te'],
  ['ok','ol','on','un','ur','ar','ır','im','om','mur','kal','kol'],
@@ -157,7 +170,7 @@ class WordScreen extends StatelessWidget{
  const Text('Cümle okuyorum',style:TextStyle(fontSize:20,fontWeight:FontWeight.bold)),
  Card(child:ListTile(title:Text(sentences[index],style:const TextStyle(fontSize:20,fontWeight:FontWeight.bold)),trailing:IconButton(onPressed:()=>speak(sentences[index]),icon:const Icon(Icons.volume_up)))),
  const SizedBox(height:12),
- ...words[index].map((w)=>Card(child:ListTile(leading:Text(emoji(w),style:const TextStyle(fontSize:28)),title:Text(w,style:const TextStyle(fontSize:24,fontWeight:FontWeight.bold)),trailing:IconButton(onPressed:()=>speak(w),icon:const Icon(Icons.volume_up))))),
+ ...words[index].map((w)=>Card(child:ListTile(leading:illustration(w),title:Text(w,style:const TextStyle(fontSize:24,fontWeight:FontWeight.bold)),trailing:IconButton(onPressed:()=>speak(w),icon:const Icon(Icons.volume_up))))),
  ]));
 }
 class Games extends StatefulWidget{
