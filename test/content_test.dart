@@ -18,6 +18,13 @@ void main() {
     expect(groups.expand((g) => g).toSet().length, 29);
   });
 
+  test('Turkish uppercase letters are rendered correctly', () {
+    expect(upperLetter('i'), 'İ');
+    expect(upperLetter('ı'), 'I');
+    expect(upperLetter('ş'), 'Ş');
+    expect(upperLetter('ğ'), 'Ğ');
+  });
+
   test('each stage has syllable and word practice', () {
     expect(syllables.length, 4);
     expect(words.length, 4);
