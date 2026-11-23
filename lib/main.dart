@@ -30,7 +30,7 @@ const themeNames = [
 ];
 String upperLetter(String letter) => const {
  'i':'İ','ı':'I','ö':'Ö','ü':'Ü','ç':'Ç','ş':'Ş','ğ':'Ğ',
- }[letter] ?? letter.toUpperCase();
+ }[letter] ?? upperLetter(letter);
 
 const words = [
  ['an','ana','anne','at','et','ten','net','nane'],
