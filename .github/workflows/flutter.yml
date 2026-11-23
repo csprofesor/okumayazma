@@ -21,4 +21,12 @@ jobs:
       - run: flutter analyze
       - run: flutter test
       - run: flutter build web
-      - run: flutter build apk --debug || (flutter build apk --debug --verbose > apk_build_err.log 2>&1; tail -n 100 apk_build_err.log; exit 1)
+      - name: Build Android APK
+        run: |
+          if ! flutter build apk --debug; then
+            echo "### APK Build Failure Log" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            flutter build apk --debug --verbose 2>&1 | tail -n 80 >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
