@@ -121,6 +121,8 @@ class _GroupScreenState extends State<GroupScreen>{
  @override Widget build(BuildContext context)=>Scaffold(
   appBar:AppBar(title:Text('Tema ${widget.index+1}')),
   body:ListView(padding:const EdgeInsets.all(18),children:[
+   Text(themeNames[widget.index],style:const TextStyle(fontSize:22,fontWeight:FontWeight.w900)),
+   const SizedBox(height:6),
    const Text('Harfleri sırayla öğren. Harf adına dokunarak dinle; kelimeleri de sesli tekrar et.',style:TextStyle(fontSize:16)),
    const SizedBox(height:16),
    GridView.count(shrinkWrap:true,physics:const NeverScrollableScrollPhysics(),crossAxisCount:3,childAspectRatio:.9,children:groups[widget.index].map((l)=>Card(child:InkWell(borderRadius:BorderRadius.circular(20),onTap:()=>Navigator.push(context,MaterialPageRoute(builder:(_)=>LetterScreen(letter:l,onDone:()async{await markDone(l);await refresh();widget.onDone();}))),child:Column(mainAxisAlignment:MainAxisAlignment.center,children:[
