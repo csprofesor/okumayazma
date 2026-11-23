@@ -181,7 +181,14 @@ class Games extends StatefulWidget{
 }
 class _GamesState extends State<Games>{
  final rng=Random();late String target;late List<String> options;int score=0;int? picked; late List<String> available;
- @override void initState(){super.initState();available=unlockedLetters();next();}
+ @override void initState(){super.initState();available=unlockedLetters();prepareQuestion();}
+ @override void didUpdateWidget(covariant Games oldWidget){
+  super.didUpdateWidget(oldWidget);
+  if(oldWidget.completed.length!=widget.completed.length||!oldWidget.completed.containsAll(widget.completed)){
+   available=unlockedLetters();
+   prepareQuestion();
+  }
+ }
  List<String> unlockedLetters(){
   final result=<String>[];
   for(var i=0;i<groups.length;i++){
@@ -190,7 +197,13 @@ class _GamesState extends State<Games>{
   }
   return result;
  }
- void next(){target=available[rng.nextInt(available.length)];options=[target];while(options.length<4){final x=available[rng.nextInt(available.length)];if(!options.contains(x))options.add(x);}options.shuffle();picked=null;setState((){});}
+ void prepareQuestion(){
+  target=available[rng.nextInt(available.length)];
+  options=[target];
+  while(options.length<4){final x=available[rng.nextInt(available.length)];if(!options.contains(x))options.add(x);}
+  options.shuffle();picked=null;
+ }
+ void next(){prepareQuestion();setState((){});}
  @override Widget build(BuildContext context)=>ListView(padding:const EdgeInsets.all(20),children:[
  const Text('Harf adını dinle ve doğru harfi bul!',style:TextStyle(fontSize:23,fontWeight:FontWeight.w900)),
  Text('Puanın: $score'),const SizedBox(height:20),
