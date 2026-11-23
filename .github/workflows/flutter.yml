@@ -21,4 +21,4 @@ jobs:
       - run: flutter analyze
       - run: flutter test
       - run: flutter build web
-      - run: flutter build apk --debug
+      - run: flutter build apk --debug || (flutter build apk --debug --verbose > apk_build_err.log 2>&1; tail -n 100 apk_build_err.log; exit 1)
