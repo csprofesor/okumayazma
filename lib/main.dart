@@ -5,19 +5,28 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(const MinikOkur());
 
-const groups = [
+// Official five sound groups; theme stages below follow the MEB first-grade teaching sequence.
+const officialSoundGroups = [
  ['a','n','e','t','i','l'],
  ['o','k','u','r','ı','m'],
  ['ü','s','ö','y','d','z'],
  ['ç','b','g','c','ş'],
  ['p','h','v','ğ','f','j'],
 ];
+
+// MEB theme progression: Theme 1 teaches a-n-e-t; Theme 2 completes i-l and begins o-k-u;
+// Theme 3 completes group 2 and teaches group 3; Theme 4 teaches groups 4 and 5.
+const groups = [
+ ['a','n','e','t'],
+ ['i','l','o','k','u'],
+ ['r','ı','m','ü','s','ö','y','d','z'],
+ ['ç','b','g','c','ş','p','h','v','ğ','f','j'],
+];
 const words = [
- ['an','ana','anne','Ela','Ali','at','el','al','tel','nine','nane'],
- ['okul','orman','kola','kule','mum','nar','limon','motor'],
- ['üzüm','süt','söz','yüz','deniz','zeytin'],
- ['çilek','çok','bal','bebek','gemi','çiçek','şeker'],
- ['papatya','harita','vazo','fırın','yağmur','jilet'],
+ ['an','ana','anne','at','et','ten','net','nane'],
+ ['Ela','Ali','el','al','tel','nine','okul','ot','kek','kule','kutu','un','kola'],
+ ['orman','mum','nar','limon','motor','üzüm','süt','söz','yüz','deniz','zeytin','ördek','yol','dede','ırmak','düdük'],
+ ['çilek','çok','bal','bebek','gemi','çiçek','şeker','papatya','harita','vazo','fırın','yağmur','jilet','şapka','çorap'],
 ];
 final tts = FlutterTts();
 Future<void> speak(String s) async {
@@ -73,8 +82,8 @@ class _HomeState extends State<Home> {
    const SizedBox(height:7),Text('${done.length}/29 ses tamamlandı',style:const TextStyle(color:Colors.white,fontWeight:FontWeight.bold)),
   ])),
   const SizedBox(height:22),const Text('Öğrenme yolculuğum',style:TextStyle(fontSize:21,fontWeight:FontWeight.w900)),
-  ...List.generate(5,(i){ final unlocked=i==0||groups.take(i).every((g)=>g.every(done.contains)); final count=groups[i].where(done.contains).length; return Card(margin:const EdgeInsets.only(top:10),child:ListTile(
-   leading:CircleAvatar(child:unlocked?Text('${i+1}'):const Icon(Icons.lock_outline)),title:Text('${i+1}. Ses Grubu',style:const TextStyle(fontWeight:FontWeight.bold)),
+  ...List.generate(groups.length,(i){ final unlocked=i==0||groups.take(i).every((g)=>g.every(done.contains)); final count=groups[i].where(done.contains).length; return Card(margin:const EdgeInsets.only(top:10),child:ListTile(
+   leading:CircleAvatar(child:unlocked?Text('${i+1}'):const Icon(Icons.lock_outline)),title:Text('${i+1}. Öğrenme Aşaması',style:const TextStyle(fontWeight:FontWeight.bold)),
    subtitle:Text('${groups[i].join('  ·  ')}  •  $count/${groups[i].length}'),trailing:Icon(unlocked?Icons.chevron_right:Icons.lock_outline),
    onTap:unlocked?()=>Navigator.push(context,MaterialPageRoute(builder:(_)=>GroupScreen(index:i,onDone:load))):null,
   ));}),
@@ -92,7 +101,7 @@ class _GroupScreenState extends State<GroupScreen>{
  @override void initState(){super.initState();refresh();}
  Future<void> refresh()async{done=await readProgress();if(mounted)setState((){});}
  @override Widget build(BuildContext context)=>Scaffold(
-  appBar:AppBar(title:Text('${widget.index+1}. Ses Grubu')),
+  appBar:AppBar(title:Text('${widget.index+1}. Öğrenme Aşaması')),
   body:ListView(padding:const EdgeInsets.all(18),children:[
    const Text('Harfleri sırayla öğren. Harf adına dokunarak dinle; kelimeleri de sesli tekrar et.',style:TextStyle(fontSize:16)),
    const SizedBox(height:16),
@@ -121,8 +130,8 @@ class LetterScreen extends StatelessWidget{
  }
 }
 const examples={
- 'a':['ana','at','al'],'n':['anne','nine','nane'],'e':['el','Ela','et'],'t':['at','tel','tat'],'i':['ile','Ali','il'],'l':['lale','el','Ali'],
- 'o':['okul','ot','orman'],'k':['kek','kedi','okul'],'u':['un','kutu','mum'],'r':['nar','ar','ır'],'ı':['ışık','ırmak'],'m':['mum','masa','limon'],
+ 'a':['ana','at','an'],'n':['anne','nane','net'],'e':['et','ten','net'],'t':['at','et','ten'],'i':['ile','Ali','il'],'l':['lale','el','Ali'],
+ 'o':['okul','ot','orman'],'k':['kek','okul','kola'],'u':['un','kutu','kul'],'r':['nar','ar','ır'],'ı':['ırmak','sarı','alır'],'m':['mum','masa','limon'],
  'ü':['üzüm','süt','ütü'],'s':['su','sarı','ses'],'ö':['ördek','ön','öz'],'y':['yol','yemek','ay'],'d':['dut','deniz','dede'],'z':['zil','zeytin','üzüm'],
  'ç':['çilek','çiçek','çok'],'b':['bal','bebek','bal'],'g':['gemi','göz','gül'],'c':['cam','ceviz','ceket'],'ş':['şeker','kuş','şişe'],
  'p':['para','papatya','ip'],'h':['halı','horoz','hava'],'v':['vazo','ev','vişne'],'ğ':['dağ','yağmur','soğan'],'f':['fırın','fil','fare'],'j':['jet','judo','jilet']
@@ -147,18 +156,16 @@ Widget illustration(String word){
 }
 
 const syllables=[
- ['an','en','et','al','el','il','at','it','la','na','ne','te'],
- ['ok','ol','on','un','ur','ar','ır','im','om','mur','kal','kol'],
- ['süt','söz','yüz','düz','saz','sor','dur','üz','öz','yol','dön'],
- ['bal','baş','gel','gül','çel','çok','kaç','baş','göz','güç'],
- ['fil','far','var','yap','par','fır','pır','jilet','vapur','pala'],
+ ['an','en','et','at','na','ne','ta','te','ten','net'],
+ ['il','in','it','el','al','ol','on','ok','kol','kul','oku','ulu','ile','ela'],
+ ['ur','ar','ır','im','om','mur','kal','kol','süt','söz','yüz','düz','saz','sor','dur','üz','öz','yol','dön'],
+ ['bal','baş','gel','gül','çel','çok','kaç','göz','güç','fil','far','var','yap','par','fır','pır','jilet','vapur','pala'],
 ];
 const sentences=[
- 'Ela el ele.',
- 'Ali okula iner.',
+ '',
+ 'Ali ile Ela el ele.',
  'Dede üzüm alır.',
  'Çilek çok tatlı.',
- 'Pelin harita yapar.',
 ];
 class WordScreen extends StatelessWidget{
  final int index;const WordScreen({super.key,required this.index});
@@ -169,7 +176,7 @@ class WordScreen extends StatelessWidget{
  Wrap(spacing:8,runSpacing:8,children:syllables[index].map((s)=>ActionChip(label:Text(s,style:const TextStyle(fontSize:19,fontWeight:FontWeight.bold)),onPressed:()=>speak(s))).toList()),
  const SizedBox(height:16),
  const Text('Cümle okuyorum',style:TextStyle(fontSize:20,fontWeight:FontWeight.bold)),
- Card(child:ListTile(title:Text(sentences[index],style:const TextStyle(fontSize:20,fontWeight:FontWeight.bold)),trailing:IconButton(onPressed:()=>speak(sentences[index]),icon:const Icon(Icons.volume_up)))),
+ if(sentences[index].isNotEmpty) Card(child:ListTile(title:Text(sentences[index],style:const TextStyle(fontSize:20,fontWeight:FontWeight.bold)),trailing:IconButton(onPressed:()=>speak(sentences[index]),icon:const Icon(Icons.volume_up)))),
  const SizedBox(height:12),
  ...words[index].map((w)=>Card(child:ListTile(leading:illustration(w),title:Text(w,style:const TextStyle(fontSize:24,fontWeight:FontWeight.bold)),trailing:IconButton(onPressed:()=>speak(w),icon:const Icon(Icons.volume_up))))),
  ]));
