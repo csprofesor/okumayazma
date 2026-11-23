@@ -110,10 +110,11 @@ class LetterScreen extends StatelessWidget{
  const LetterScreen({super.key,required this.letter,required this.onDone});
  @override Widget build(BuildContext context){
   final samples=examples[letter]??[letter];
-  return Scaffold(appBar:AppBar(title:Text('"$letter" sesini öğreniyorum')),body:ListView(padding:const EdgeInsets.all(18),children:[
+  return Scaffold(appBar:AppBar(title:Text('"$letter" harfini öğreniyorum')),body:ListView(padding:const EdgeInsets.all(18),children:[
    Container(height:180,decoration:BoxDecoration(color:const Color(0xffe7f1ff),borderRadius:BorderRadius.circular(24)),child:Center(child:Text(letter,style:const TextStyle(fontSize:125,fontWeight:FontWeight.w900,color:Color(0xff3977c3))))),
    const SizedBox(height:14),FilledButton.icon(onPressed:()=>speak('Bu harfin adı: ${letter.toUpperCase()}. Küçük harfi: $letter.'),icon:const Icon(Icons.volume_up),label:const Text('Harf adını dinle')),
-   const SizedBox(height:20),const Text('Bu ses hangi kelimelerde var?',style:TextStyle(fontSize:20,fontWeight:FontWeight.bold)),
+   const SizedBox(height:12),const Text('Harf adı ile harfin çıkardığı ses farklıdır. Harfin sesini öğretmeninle çalış; aşağıdaki kelimeleri dinleyip tekrar et.',style:TextStyle(fontSize:15,height:1.4)),
+   const SizedBox(height:12),const Text('Bu harf hangi kelimelerde var?',style:TextStyle(fontSize:20,fontWeight:FontWeight.bold)),
    ...samples.map((w)=>Card(child:ListTile(leading:illustration(w),title:Text(w,style:const TextStyle(fontSize:23,fontWeight:FontWeight.bold)),trailing:IconButton(icon:const Icon(Icons.volume_up),onPressed:()=>speak(w))))),
    const SizedBox(height:14),FilledButton(onPressed:()async{await onDone();if(context.mounted)Navigator.pop(context);},child:const Text('Bu sesi öğrendim')),
   ]));
@@ -201,15 +202,20 @@ class _GamesState extends State<Games>{
 }
 class Writing extends StatefulWidget{const Writing({super.key});@override State<Writing> createState()=>_WritingState();}
 class _WritingState extends State<Writing>{
- String letter='a';List<Offset?> points=[];
+ String letter='a';bool uppercase=false;List<Offset?> points=[];
  @override Widget build(BuildContext context)=>ListView(padding:const EdgeInsets.all(18),children:[
  const Text('Yazı atölyesi',style:TextStyle(fontSize:24,fontWeight:FontWeight.w900)),
- const Text('Harf modelini takip et. Parmağınla veya kalemle çiz.'),
+ const Text('Harf modelini takip et. Küçük ve büyük harf arasında geçiş yap; parmağınla veya kalemle çiz.'),
  Wrap(spacing:6,children:groups.expand((g)=>g).map((l)=>ChoiceChip(label:Text(l),selected:letter==l,onSelected:(_)=>setState((){letter=l;points.clear();}))).toList()),
+ const SizedBox(height:8),
+ Wrap(spacing:8,children:[
+  ChoiceChip(label:const Text('Küçük harf'),selected:!uppercase,onSelected:(_)=>setState(()=>uppercase=false)),
+  ChoiceChip(label:const Text('Büyük harf'),selected:uppercase,onSelected:(_)=>setState(()=>uppercase=true)),
+ ]),
  Container(height:320,margin:const EdgeInsets.symmetric(vertical:14),decoration:BoxDecoration(color:Colors.white,borderRadius:BorderRadius.circular(22),border:Border.all(color:Colors.blueGrey.shade100)),
- child:LayoutBuilder(builder:(c,box)=>GestureDetector(onPanUpdate:(d)=>setState(()=>points.add(d.localPosition)),onPanEnd:(_)=>setState(()=>points.add(null)),child:CustomPaint(size:Size(box.maxWidth,box.maxHeight),painter:TracePainter(letter,points))))),
+ child:LayoutBuilder(builder:(c,box)=>GestureDetector(onPanUpdate:(d)=>setState(()=>points.add(d.localPosition)),onPanEnd:(_)=>setState(()=>points.add(null)),child:CustomPaint(size:Size(box.maxWidth,box.maxHeight),painter:TracePainter(uppercase?letter.toUpperCase():letter,points))))),
  OutlinedButton.icon(onPressed:()=>setState(()=>points.clear()),icon:const Icon(Icons.refresh),label:const Text('Yeniden yaz')),
- FilledButton.icon(onPressed:()=>speak('Şimdi $letter harfini yazıyoruz.'),icon:const Icon(Icons.volume_up),label:const Text('Yazılışı dinle')),
+ FilledButton.icon(onPressed:()=>speak('Şimdi ${uppercase?'büyük':'küçük'} $letter harfini yazıyoruz.'),icon:const Icon(Icons.volume_up),label:const Text('Yazılışı dinle')),
  ]);
 }
 class TracePainter extends CustomPainter{
