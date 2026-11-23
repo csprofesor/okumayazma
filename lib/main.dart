@@ -72,7 +72,7 @@ class _HomeState extends State<Home> {
  @override void initState(){super.initState();load();}
  Future<void> load() async {done=await readProgress();if(mounted)setState((){});}
  @override Widget build(BuildContext context){
-  final pages=[home(),Games(completed:done),const Writing(),const Parents()];
+  final pages=[home(),Games(completed:done),Writing(completed:done),const Parents()];
   return Scaffold(
    appBar:AppBar(title:const Text('Minik Okur',style:TextStyle(fontWeight:FontWeight.w900)),actions:[IconButton(onPressed:()=>speak('Merhaba minik okur. Birlikte okuyup yazmayı öğreneceğiz.'),icon:const Icon(Icons.volume_up))]),
    body:pages[tab],
@@ -428,13 +428,25 @@ class _GamesState extends State<Games>{
   ),
  ]);
 }
-class Writing extends StatefulWidget{const Writing({super.key});@override State<Writing> createState()=>_WritingState();}
+class Writing extends StatefulWidget{
+ final Set<String> completed;
+ const Writing({super.key,required this.completed});
+ @override State<Writing> createState()=>_WritingState();
+}
 class _WritingState extends State<Writing>{
  String letter='a';bool uppercase=false;List<Offset?> points=[];
+ int unlockedStageCount(){
+  var count=1;
+  for(var i=0;i<groups.length-1;i++){
+   if(groups[i].every(widget.completed.contains)) count=i+2;
+   else break;
+  }
+  return count;
+ }
  @override Widget build(BuildContext context)=>ListView(padding:const EdgeInsets.all(18),children:[
  const Text('Yazı atölyesi',style:TextStyle(fontSize:24,fontWeight:FontWeight.w900)),
  const Text('Harf modelini takip et. Küçük ve büyük harf arasında geçiş yap; parmağınla veya kalemle çiz.'),
- Wrap(spacing:6,children:groups.expand((g)=>g).map((l)=>ChoiceChip(label:Text(l),selected:letter==l,onSelected:(_)=>setState((){letter=l;points.clear();}))).toList()),
+ Wrap(spacing:6,children:groups.take(unlockedStageCount()).expand((g)=>g).map((l)=>ChoiceChip(label:Text(l),selected:letter==l,onSelected:(_)=>setState((){letter=l;points.clear();}))).toList()),
  const SizedBox(height:8),
  Wrap(spacing:8,children:[
   ChoiceChip(label:const Text('Küçük harf'),selected:!uppercase,onSelected:(_)=>setState(()=>uppercase=false)),
