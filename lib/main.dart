@@ -74,7 +74,7 @@ class _HomeState extends State<Home> {
   ])),
   const SizedBox(height:22),const Text('Öğrenme yolculuğum',style:TextStyle(fontSize:21,fontWeight:FontWeight.w900)),
   ...List.generate(5,(i){ final unlocked=i==0||groups.take(i).every((g)=>g.every(done.contains)); final count=groups[i].where(done.contains).length; return Card(margin:const EdgeInsets.only(top:10),child:ListTile(
-   leading:CircleAvatar(child:Icon(unlocked?Icons.looks_one:Icons.lock_outline)),title:Text('${i+1}. Ses Grubu',style:const TextStyle(fontWeight:FontWeight.bold)),
+   leading:CircleAvatar(child:unlocked?Text('${i+1}'):const Icon(Icons.lock_outline)),title:Text('${i+1}. Ses Grubu',style:const TextStyle(fontWeight:FontWeight.bold)),
    subtitle:Text('${groups[i].join('  ·  ')}  •  $count/${groups[i].length}'),trailing:Icon(unlocked?Icons.chevron_right:Icons.lock_outline),
    onTap:unlocked?()=>Navigator.push(context,MaterialPageRoute(builder:(_)=>GroupScreen(index:i,onDone:load))):null,
   ));}),
@@ -130,7 +130,7 @@ Widget illustration(String word){
  IconData icon=Icons.auto_awesome_rounded;
  if(word.contains('anne')||word.contains('ana')) icon=Icons.family_restroom_rounded;
  else if(word.contains('at')) icon=Icons.pets_rounded;
- else if(word.contains('ördek')||word.contains('balık')) icon=Icons.flutter_dash_rounded;
+ else if(word.contains('ördek')||word.contains('balık')) icon=Icons.pets_rounded;
  else if(word.contains('çilek')||word.contains('üzüm')) icon=Icons.eco_rounded;
  else if(word.contains('çiçek')||word.contains('papatya')) icon=Icons.local_florist_rounded;
  else if(word.contains('araba')) icon=Icons.directions_car_rounded;
