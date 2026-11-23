@@ -53,7 +53,7 @@ class _HomeState extends State<Home> {
  @override void initState(){super.initState();load();}
  Future<void> load() async {done=await readProgress();if(mounted)setState((){});}
  @override Widget build(BuildContext context){
-  final pages=[home(),const Games(),const Writing(),const Parents()];
+  final pages=[home(),Games(completed:done),const Writing(),const Parents()];
   return Scaffold(
    appBar:AppBar(title:const Text('Minik Okur',style:TextStyle(fontWeight:FontWeight.w900)),actions:[IconButton(onPressed:()=>speak('Merhaba minik okur. Birlikte okuyup yazmayı öğreneceğiz.'),icon:const Icon(Icons.volume_up))]),
    body:pages[tab],
@@ -73,11 +73,11 @@ class _HomeState extends State<Home> {
    const SizedBox(height:7),Text('${done.length}/29 ses tamamlandı',style:const TextStyle(color:Colors.white,fontWeight:FontWeight.bold)),
   ])),
   const SizedBox(height:22),const Text('Öğrenme yolculuğum',style:TextStyle(fontSize:21,fontWeight:FontWeight.w900)),
-  ...List.generate(5,(i)=>Card(margin:const EdgeInsets.only(top:10),child:ListTile(
-   leading:CircleAvatar(child:Text('${i+1}')),title:Text('${i+1}. Ses Grubu',style:const TextStyle(fontWeight:FontWeight.bold)),
-   subtitle:Text(groups[i].join('  ·  ')),trailing:const Icon(Icons.chevron_right),
-   onTap:()=>Navigator.push(context,MaterialPageRoute(builder:(_)=>GroupScreen(index:i,onDone:load))),
-  ))),
+  ...List.generate(5,(i){ final unlocked=i==0||groups.take(i).every((g)=>g.every(done.contains)); final count=groups[i].where(done.contains).length; return Card(margin:const EdgeInsets.only(top:10),child:ListTile(
+   leading:CircleAvatar(child:Icon(unlocked?Icons.looks_one:Icons.lock_outline)),title:Text('${i+1}. Ses Grubu',style:const TextStyle(fontWeight:FontWeight.bold)),
+   subtitle:Text('${groups[i].join('  ·  ')}  •  $count/\${groups[i].length}'),trailing:Icon(unlocked?Icons.chevron_right:Icons.lock_outline),
+   onTap:unlocked?()=>Navigator.push(context,MaterialPageRoute(builder:(_)=>GroupScreen(index:i,onDone:load))):null,
+  ));}),
   const SizedBox(height:18),const Text('Hızlı erişim',style:TextStyle(fontSize:20,fontWeight:FontWeight.bold)),
   Row(children:[Expanded(child:Card(child:ListTile(leading:const Icon(Icons.hearing,color:Colors.orange),title:const Text('Harf oyunu'),onTap:()=>setState(()=>tab=1)))),Expanded(child:Card(child:ListTile(leading:const Icon(Icons.gesture,color:Colors.green),title:const Text('Yazı atölyesi'),onTap:()=>setState(()=>tab=2))))]),
  ]);
@@ -94,7 +94,7 @@ class _GroupScreenState extends State<GroupScreen>{
  @override Widget build(BuildContext context)=>Scaffold(
   appBar:AppBar(title:Text('${widget.index+1}. Ses Grubu')),
   body:ListView(padding:const EdgeInsets.all(18),children:[
-   const Text('Harfe dokun, sesini dinle ve örnek kelimeleri incele.',style:TextStyle(fontSize:16)),
+   const Text('Harfleri sırayla öğren. Harf adına dokunarak dinle; kelimeleri de sesli tekrar et.',style:TextStyle(fontSize:16)),
    const SizedBox(height:16),
    GridView.count(shrinkWrap:true,physics:const NeverScrollableScrollPhysics(),crossAxisCount:3,childAspectRatio:.9,children:groups[widget.index].map((l)=>Card(child:InkWell(borderRadius:BorderRadius.circular(20),onTap:()=>Navigator.push(context,MaterialPageRoute(builder:(_)=>LetterScreen(letter:l,onDone:()async{await markDone(l);await refresh();widget.onDone();}))),child:Column(mainAxisAlignment:MainAxisAlignment.center,children:[
     Text(l,style:const TextStyle(fontSize:52,fontWeight:FontWeight.w900,color:Color(0xff3977c3))),
@@ -112,7 +112,7 @@ class LetterScreen extends StatelessWidget{
   final samples=examples[letter]??[letter];
   return Scaffold(appBar:AppBar(title:Text('"$letter" sesini öğreniyorum')),body:ListView(padding:const EdgeInsets.all(18),children:[
    Container(height:180,decoration:BoxDecoration(color:const Color(0xffe7f1ff),borderRadius:BorderRadius.circular(24)),child:Center(child:Text(letter,style:const TextStyle(fontSize:125,fontWeight:FontWeight.w900,color:Color(0xff3977c3))))),
-   const SizedBox(height:14),FilledButton.icon(onPressed:()=>speak('Bu harfin sesi $letter. Büyük harfi ${letter.toUpperCase()}, küçük harfi $letter.'),icon:const Icon(Icons.volume_up),label:const Text('Harf sesini dinle')),
+   const SizedBox(height:14),FilledButton.icon(onPressed:()=>speak('Bu harfin adı: ${letter.toUpperCase()}. Küçük harfi: $letter.'),icon:const Icon(Icons.volume_up),label:const Text('Harf adını dinle')),
    const SizedBox(height:20),const Text('Bu ses hangi kelimelerde var?',style:TextStyle(fontSize:20,fontWeight:FontWeight.bold)),
    ...samples.map((w)=>Card(child:ListTile(leading:Text(emoji(w),style:const TextStyle(fontSize:27)),title:Text(w,style:const TextStyle(fontSize:23,fontWeight:FontWeight.bold)),trailing:IconButton(icon:const Icon(Icons.volume_up),onPressed:()=>speak(w))))),
    const SizedBox(height:14),FilledButton(onPressed:()async{await onDone();if(context.mounted)Navigator.pop(context);},child:const Text('Bu sesi öğrendim')),
@@ -160,13 +160,25 @@ class WordScreen extends StatelessWidget{
  ...words[index].map((w)=>Card(child:ListTile(leading:Text(emoji(w),style:const TextStyle(fontSize:28)),title:Text(w,style:const TextStyle(fontSize:24,fontWeight:FontWeight.bold)),trailing:IconButton(onPressed:()=>speak(w),icon:const Icon(Icons.volume_up))))),
  ]));
 }
-class Games extends StatefulWidget{const Games({super.key});@override State<Games> createState()=>_GamesState();}
+class Games extends StatefulWidget{
+ final Set<String> completed;
+ const Games({super.key,required this.completed});
+ @override State<Games> createState()=>_GamesState();
+}
 class _GamesState extends State<Games>{
- final rng=Random();late String target;late List<String> options;int score=0;int? picked;
- @override void initState(){super.initState();next();}
- void next(){final all=groups.expand((x)=>x).toList();target=all[rng.nextInt(all.length)];options=[target];while(options.length<4){final x=all[rng.nextInt(all.length)];if(!options.contains(x))options.add(x);}options.shuffle();picked=null;setState((){});}
+ final rng=Random();late String target;late List<String> options;int score=0;int? picked; late List<String> available;
+ @override void initState(){super.initState();available=unlockedLetters();next();}
+ List<String> unlockedLetters(){
+  final result=<String>[];
+  for(var i=0;i<groups.length;i++){
+   if(i>0&&!groups[i-1].every(widget.completed.contains))break;
+   result.addAll(groups[i]);
+  }
+  return result;
+ }
+ void next(){target=available[rng.nextInt(available.length)];options=[target];while(options.length<4){final x=available[rng.nextInt(available.length)];if(!options.contains(x))options.add(x);}options.shuffle();picked=null;setState((){});}
  @override Widget build(BuildContext context)=>ListView(padding:const EdgeInsets.all(20),children:[
- const Text('Dinle ve doğru harfi bul!',style:TextStyle(fontSize:23,fontWeight:FontWeight.w900)),
+ const Text('Harf adını dinle ve doğru harfi bul!',style:TextStyle(fontSize:23,fontWeight:FontWeight.w900)),
  Text('Puanın: $score'),const SizedBox(height:20),
  Container(height:130,decoration:BoxDecoration(color:const Color(0xffffefd9),borderRadius:BorderRadius.circular(24)),child:IconButton(iconSize:60,onPressed:()=>speak(target),icon:const Icon(Icons.volume_up))),
  const SizedBox(height:18),
@@ -206,8 +218,8 @@ class Parents extends StatelessWidget{
  const SizedBox(height:12),
  const Text('Uygulama, okulda öğretmen eşliğinde yürütülen ilk okuma yazma sürecini evde kısa tekrarlarla destekler.',style:TextStyle(fontSize:16,height:1.5)),
  const SizedBox(height:14),
- const Info(title:'Öğrenme sırası',body:'Ses → harf → hece → anlamlı kelime → cümle → kısa metin. Henüz öğrenilmemiş seslerle kelime kurulmamalıdır.'),
- const Info(title:'Günlük çalışma',body:'Kısa ve düzenli tekrarlar yapın. Hız için zorlamayın; doğru sesletim, anlam ve olumlu geri bildirim önemlidir.'),
+ const Info(title:'Öğrenme sırası',body:'Ses farkındalığı → harf → hece → anlamlı kelime → cümle → kısa metin. Gruplar sırayla açılır. Harf adı ile harfin çıkardığı ses aynı şey değildir; doğru sesletim öğretmen rehberliğinde çalışılmalıdır.'),
+ const Info(title:'Günlük çalışma',body:'Kısa ve düzenli tekrarlar yapın. Hız için zorlamayın; çocuğun öğrendiği seslerle hece ve kelime kurmasına fırsat verin. Olumlu geri bildirim kullanın.'),
  const Info(title:'Yazı çalışması',body:'Tırnaksız dik temel harfleri model alarak çalışın. Çocuğun el tercihini zorla değiştirmeyin.'),
  const Info(title:'Gizlilik',body:'Bu sürümde hesap, reklam, konum, kamera veya mikrofonla veri toplama yoktur. Öğrenme ilerlemesi cihazda saklanır.'),
  const SizedBox(height:12),const Text('Uygulama yardımcı öğrenme aracıdır; öğretmenin veya MEB ders kitabının yerini almaz.',style:TextStyle(fontWeight:FontWeight.bold)),
