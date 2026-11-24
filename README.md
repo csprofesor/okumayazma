@@ -38,20 +38,90 @@ Resmî kaynaklar:
 
 Uygulama öğretmenin, resmî programın veya güncel ders kitabının yerine geçmez. Tema süreleri, rakam öğretimi, dinleme-konuşma çıktıları ve ölçme-değerlendirme çalışmaları da sonraki sürümlerde eklenmelidir.
 
-## Çalıştırma
-Flutter 3.24+ ve Dart 3.3+ gerekir.
+## Kurulum ve Gereksinimler
+
+Projeyi yerel ortamınızda derlemek ve çalıştırmak için aşağıdaki araçların kurulu olması gerekir:
+
+### 1. Flutter ve Dart SDK
+- **Flutter SDK Kurulum Kılavuzu:** [docs.flutter.dev/get-started/install](https://docs.flutter.dev/get-started/install)
+  - [Windows Kurulumu](https://docs.flutter.dev/get-started/install/windows)
+  - [macOS Kurulumu](https://docs.flutter.dev/get-started/install/macos)
+  - [Linux Kurulumu](https://docs.flutter.dev/get-started/install/linux)
+  - [ChromeOS Kurulumu](https://docs.flutter.dev/get-started/install/chromeos)
+- **Dart SDK:** [dart.dev/get-dart](https://dart.dev/get-dart) *(Flutter SDK ile birlikte otomatik gelir)*
+
+### 2. Geliştirme Ortamı (IDE) ve Eklentiler
+- **Visual Studio Code:** [code.visualstudio.com](https://code.visualstudio.com/)
+  - [VS Code Flutter Eklentisi](https://marketplace.visualstudio.com/items?itemName=Dart-Code.flutter)
+  - [VS Code Dart Eklentisi](https://marketplace.visualstudio.com/items?itemName=Dart-Code.dart-code)
+- **Android Studio:** [developer.android.com/studio](https://developer.android.com/studio)
+  - [Android Studio Flutter Eklentisi](https://plugins.jetbrains.com/plugin/9212-flutter)
+
+### 3. Hedef Platform Araçları
+- **Android:**
+  - Android Studio ve Android SDK (Build-Tools, Platform-Tools, SDK Platform 34+)
+  - **Java Development Kit (JDK 17 LTS):** [Eclipse Temurin OpenJDK 17](https://adoptium.net/temurin/releases/?version=17)
+- **Web:**
+  - **Google Chrome:** [google.com/chrome](https://www.google.com/chrome/)
+- **iOS / macOS (yalnızca macOS kullanıcıları için):**
+  - **Xcode:** [Mac App Store - Xcode](https://apps.apple.com/app/xcode/id497799835)
+  - **CocoaPods:** [cocoapods.org](https://cocoapods.org/) (`sudo gem install cocoapods`)
+- **Windows Masaüstü:**
+  - **Visual Studio Community (C++ masaüstü geliştirme paketi):** [visualstudio.microsoft.com](https://visualstudio.microsoft.com/downloads/)
+- **Linux Masaüstü:**
+  - Gerekli kütüphaneler: `clang`, `cmake`, `ninja-build`, `pkg-config`, `libgtk-3-dev`
+
+---
+
+## Kurulum Doğrulama ve Çalıştırma
+
+Kurulumların eksiksiz olduğunu doğrulamak için terminalde şu komutu çalıştırın:
+```bash
+flutter doctor -v
+```
+
+### Projeyi Çalıştırma
+Tüm bağımlılıkları yükleyin ve projeyi başlatın:
 
 ```bash
+# Bağımlılıkları indir
 flutter pub get
+
+# Bağlı veya açık emülatörde çalıştır
 flutter run
 ```
 
-Varsayılan olarak Web, macOS, Android ve iOS platform iskeleleri projede hazırdır. Örneğin doğrudan web tarayıcısında çalıştırmak için:
+Platforma özel çalıştırma komutları:
 ```bash
+# Doğrudan Web (Google Chrome) üzerinde çalıştırma
 flutter run -d chrome
+
+# Android emülatör veya fiziksel cihazda çalıştırma
+flutter run -d android
+
+# macOS masaüstü uygulamasını çalıştırma
+flutter run -d macos
+
+# Windows masaüstü uygulamasını çalıştırma
+flutter run -d windows
 ```
 
-Platform dosyalarını tazelemek veya eksik platformları tamamlamak için:
+### Test ve Analiz
+```bash
+# Kod analizi (Linter)
+flutter analyze
+
+# Birim ve widget testleri
+flutter test
+
+# Web derlemesi alma
+flutter build web
+
+# Android APK derlemesi alma
+flutter build apk --debug
+```
+
+Platform dosyalarını tazelemek veya eksik platform iskelelerini yeniden oluşturmak için:
 ```bash
 bash tool/bootstrap.sh
 ```
