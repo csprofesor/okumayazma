@@ -1,5 +1,7 @@
 # Minik Okur — İlk Okuma Yazma
 
+> 🌐 **Canlı Deneme Web Sürümü:** [https://csprofesor.github.io/okumayazma/](https://csprofesor.github.io/okumayazma/)
+
 1. sınıf öğrencileri için Türkçe ses esaslı ilk okuma yazma sürecini destekleyen Flutter uygulaması.
 
 ## Mevcut prototip
